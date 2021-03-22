@@ -8,7 +8,7 @@ use config\Viewer;
  * Class AbstractController
  * @package src\Controller
  */
-class AbstractController
+abstract class AbstractController
 {
     /**
      * @var Viewer
@@ -25,6 +25,24 @@ class AbstractController
     }
 
     /**
+     * @param int $id
+     * @return mixed
+     */
+    abstract public function view(int $id);
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    abstract public function edit(int $id);
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    abstract public function delete(int $id);
+
+    /**
      * @param string $file
      * @param array $viewData
      * @return false|string|string[]
@@ -37,6 +55,6 @@ class AbstractController
         }
 
         $this->Viewer->setData($viewData);
-        return $this->Viewer->renderView($file);
+        return $this->Viewer->render($file);
     }
 }

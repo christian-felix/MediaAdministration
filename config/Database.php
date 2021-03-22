@@ -55,8 +55,7 @@ class Database
      */
     public function insert(Entity $entity)
     {
-        //TODO: use some another approach:(MediaRepository) or use class Reflection
-        $query = 'INSERT INTO media(type, title, interpreter, image) VALUES ("' . $entity->getType() . '", "' . $entity->getTitle() . '", "' . $entity->getInterpreter() . '","'.$entity->getImage().'")';
+        $query = 'INSERT INTO media(type, title, interpreter, image) VALUES ("' . $entity->getType() . '", "' . $entity->getTitle() . '", "' . $entity->getInterpreter() . '","' . $entity->getImage() . '")';
 
         $this->conn->autocommit(false);
         $this->conn->query($query);
@@ -67,10 +66,35 @@ class Database
     }
 
     /**
+     * @param Entity $entity
+     * @throws \Exception
+     */
+    public function update(Entity $entity)
+    {
+        $query = 'UPDATE media SET type = "'. $entity->getType() . '" , title = "' . $entity->getTitle() . '" , interpreter = "' . $entity->getInterpreter() . '" , image = "' . $entity->getImage() . '"      WHERE id = ' . $entity->getId();
+
+        $this->conn->autocommit(false);
+        $this->conn->query($query);
+
+        if (!$this->conn->commit()){
+            throw new \Exception('Commit has failed' . $query);
+        }
+    }
+
+    /**
+     * @param int $id
+     */
+    public function delete(int $id)
+    {
+        $query = 'DELETE FROM media WHERE id = ' . $id;
+        $this->conn->query($query);
+    }
+
+    /**
      * @param string $query
      * @return mixed
      */
-    public function select(string $query)
+    public function findBy(string $query)
     {
         $statement = $this->conn->query($query);
         $result = $statement->fetch_all(MYSQLI_ASSOC);
@@ -84,11 +108,12 @@ class Database
      * @param $options
      * @return mixed
      */
-    public function findBy(string $query, $options)
+    public function findOneBy(string $query)
     {
-        $statement = $this->conn->prepare($query);
-        $statement->execute();
+        $statement = $this->conn->query($query);
+        $result = $statement->fetch_object();
+        $statement->free_result();
 
-        return $statement->get_result();
+        return $result;
     }
 }

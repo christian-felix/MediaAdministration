@@ -4,6 +4,7 @@ namespace src\Controller;
 
 use config\Database;
 use config\Viewer;
+use src\Model\Entity;
 use src\Model\Media;
 
 /**
@@ -39,7 +40,7 @@ class MediaController extends AbstractController
     public function index()
     {
         $sql = 'SELECT * FROM ' . $this->tbl_name;
-        $result = $this->em->select($sql);
+        $result = $this->em->findBy($sql);
 
         $mediaData = [];
 
@@ -56,7 +57,7 @@ class MediaController extends AbstractController
             $mediaData[] = $media;
         }
 
-        return $this->render('public/media/show.phtml', ['mediaData' => $mediaData]);
+        return $this->render('public/media/show.phtml', ['mediaData' => $mediaData, 'username' => 'Christian']);
     }
 
     /**
@@ -75,7 +76,6 @@ class MediaController extends AbstractController
             $media->setGenre($_POST['genre']);
             $media->setType($_POST['type']);
 
-            //upload
             $image = $this->uploadMedia();
             $media->setImage($image);
 
@@ -85,6 +85,53 @@ class MediaController extends AbstractController
         }
 
         return $this->render('public/media/add.phtml', ['mediaData' => '']);
+    }
+
+    /**
+     *  remove
+     */
+    public function delete(int $id)
+    {
+        $result = $this->em->delete($id);
+
+        header('location: http://' . $_SERVER['SERVER_NAME'].'/media');
+    }
+
+    /**
+     * @param int $id
+     * @return false|string|string[]
+     * @throws \Exception
+     */
+    public function edit(int $id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $this->update();
+            header('location: http://' . $_SERVER['SERVER_NAME'].'/media');
+        }
+
+
+        $sql = 'SELECT * FROM ' . $this->tbl_name. ' WHERE id = ' . $id;
+        $result = $this->em->findOneBy($sql);
+
+        $media = new Media();
+        $media->setId($result->id);
+        $media->setTitle($result->title);
+        $media->setPublished($result->published);
+        $media->setInterpreter($result->interpreter);
+        $media->setGenre($result->genre);
+        $media->setType($result->type);
+        $media->setImage($result->image);
+
+        return $this->render('public/media/edit.phtml', ['mediaData' => $media]);
+    }
+
+    /**
+     * @param int $id
+     */
+    public function view(int $id)
+    {
+
     }
 
     /**
@@ -104,16 +151,23 @@ class MediaController extends AbstractController
 
 
     /**
-     *  remove
+     * @throws \Exception
      */
-    public function remove()
+    protected function update()
     {
-        //TODO:
-    }
+        $date = new \DateTime();
 
+        $media = new Media();
+        $media->setId($_POST['id']);
+        $media->setTitle($_POST['title']);
+        $media->setPublished($date->format('Y-m-d'));
+        $media->setInterpreter($_POST['interpreter']);
+        $media->setGenre($_POST['genre']);
+        $media->setType($_POST['type']);
 
-    public function edit()
-    {
-        //TODO:
+        $image = $this->uploadMedia();
+        $media->setImage($image);
+
+        $this->em->update($media);
     }
 }

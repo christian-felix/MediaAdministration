@@ -2,94 +2,48 @@
 
 namespace config;
 
-use src\Controller\MediaController;
-
 /**
- *
  * Class Router
  */
 class Router
 {
-    /**
-     * @var string[]
-     */
-    protected $routes = [
-        '/login',
-        '/logout',
-        '/admin',
-        '/index',
-        '/media',
-        '/media/add',
-        '/media/delete'
-    ];
-
-    /**
-     * @var string
-     */
     protected $rootDirectory;
-
-    /**
-     * @var
-     */
     protected static $Viewer;
+    protected $Request;
+    protected $Controller;
 
     /**
      * Router constructor.
      * @param Viewer $viewer
      */
-    public function __construct(Viewer $viewer)
+    public function __construct(Viewer $viewer, Request $request)
     {
         $this->rootDirectory = $_SERVER['DOCUMENT_ROOT'];
-
         self::$Viewer = $viewer;
+        $this->Request = $request;
     }
 
     /**
-     * @param string $request
-     * @return false|string|string[]
-     * @throws \Exception
+     * @param string $url
+     * @return mixed
      */
-    public function handleRequest(string $request)
+    public function handleRequest(string $url)
     {
-        if (in_array($request, $this->routes)) {
+        $this->Request->buildRequest($url);
 
+        $controllerClass = 'src\Controller\\'.$this->Request->getController();
+        $this->Controller = new $controllerClass(self::$Viewer);
 
-            if ($request == '/media') {
+        $action = $this->Request->getAction();
+        $actionID = $this->Request->getEntityID();
 
-                $mediaController = new MediaController(self::$Viewer);
-                return $mediaController->index();
+        if (empty($actionID)) {
 
-            }else if ($request == '/media/add'){
+            return $this->Controller->$action();
 
-                $mediaController = new MediaController(self::$Viewer);
-                return $mediaController->add();
+        } else {
 
-            } else {
-
-                $file =  $this->rootDirectory . '/public' . $request .'.phtml';
-                return $this->render($file, ['username' => 'christian']);
-            }
-
-        } else {  //render some default page
-
-            return $this->render('main.phtml', []);
+            return $this->Controller->$action($actionID);
         }
-    }
-
-
-    /**
-     * @param string $file
-     * @param array $viewData
-     * @return false|string|string[]
-     * @throws \Exception
-     */
-    protected function render(string $file, array $viewData)
-    {
-        if (!file_exists($file)) {
-            throw new \Exception('page: ' . $file . ' does not exits!');
-        }
-
-        self::$Viewer->setData($viewData);
-        return self::$Viewer->renderView($file);
     }
 }
