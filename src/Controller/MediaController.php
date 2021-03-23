@@ -3,6 +3,7 @@
 namespace src\Controller;
 
 use config\Database;
+use config\Paginator;
 use config\Viewer;
 use src\Model\Entity;
 use src\Model\Media;
@@ -24,6 +25,9 @@ class MediaController extends AbstractController
      */
     private $tbl_name = 'media';
 
+
+    protected $Paginator;
+
     /**
      * MediaController constructor.
      * @param Viewer $viewer
@@ -32,6 +36,9 @@ class MediaController extends AbstractController
     {
         parent::__construct($viewer);
         $this->em = Database::getInstance();
+
+        $this->Paginator = new Paginator();
+
     }
 
     /**
@@ -39,10 +46,9 @@ class MediaController extends AbstractController
      */
     public function index()
     {
+        $mediaData = [];
         $sql = 'SELECT * FROM ' . $this->tbl_name;
         $result = $this->em->findBy($sql);
-
-        $mediaData = [];
 
         foreach ($result as $item) {
 
@@ -57,7 +63,9 @@ class MediaController extends AbstractController
             $mediaData[] = $media;
         }
 
-        return $this->render('public/media/show.phtml', ['mediaData' => $mediaData, 'username' => 'Christian']);
+        $this->Paginator->setResult($mediaData);
+
+        return $this->render('public/media/show.phtml', ['mediaData' => $mediaData, 'username' => 'Christian', 'Paginator' => $this->Paginator]);
     }
 
     /**
@@ -92,8 +100,11 @@ class MediaController extends AbstractController
      */
     public function delete(int $id)
     {
+        //valide delete
         $result = $this->em->delete($id);
 
+
+        //TODO: reload instead header() relocation
         header('location: http://' . $_SERVER['SERVER_NAME'].'/media');
     }
 

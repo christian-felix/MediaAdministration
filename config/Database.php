@@ -55,7 +55,7 @@ class Database
      */
     public function insert(Entity $entity)
     {
-        $query = 'INSERT INTO media(type, title, interpreter, image) VALUES ("' . $entity->getType() . '", "' . $entity->getTitle() . '", "' . $entity->getInterpreter() . '","' . $entity->getImage() . '")';
+        $query = 'INSERT INTO media(type, title, interpreter, image, genre, published) VALUES ("' . $entity->getType() . '", "' . $entity->getTitle() . '","' . $entity->getInterpreter() . '","' . $entity->getImage() . '","' . $entity->getGenre() . '", "' . $entity->getPublished() . '")';
 
         $this->conn->autocommit(false);
         $this->conn->query($query);

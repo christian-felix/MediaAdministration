@@ -43,7 +43,11 @@
 
     <?php
 
-    foreach($this->viewData['mediaData'] as $key => $dt) { ?>
+    //foreach($this->viewData['mediaData'] as $key => $dt) {
+    foreach($this->viewData['Paginator'] as $key => $data) {
+
+        foreach ($data as $key2 => $dt) {
+        ?>
 
         <li class="media p-4" style="border: 1px solid; background-color: #d6d8d9;">
             <img class="mr-3"  style="max-width: 200px;" src="public/images/<?=$dt->getImage()?>" alt="Generic placeholder image">
@@ -58,11 +62,24 @@
             </div>
             <div>
                 <a href="media/edit/<?=$dt->getId()?>" class="btn btn-secondary btn active" role="button" aria-pressed="true">Edit</a>
-                <a href="media/delete/<?=$dt->getId();?>" class="btn btn-secondary btn active" role="button" aria-pressed="true">Delete</a>
+                <a href="media/delete/<?=$dt->getId();?>" class="delete btn btn-secondary btn active" role="button" aria-pressed="true">Delete</a>
             </div>
         </li>
 
-    <?php } ?>
+    <?php }
+    }
+    ?>
+
+
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </nav>
 
 </ul>
 
