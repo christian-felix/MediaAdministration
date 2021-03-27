@@ -1,7 +1,7 @@
 <?php
 
 
-namespace config;
+namespace src\Service;
 
 /**
  * Class Paginator
@@ -9,7 +9,7 @@ namespace config;
  */
 class Paginator implements \Iterator
 {
-    protected $itemPerPage = 2;
+    protected $itemPerPage = 3;
     protected $result = [];
     protected $pagesNumber = 0;
     protected $currentPage = 0;
@@ -30,25 +30,32 @@ class Paginator implements \Iterator
 
         foreach ($result as $item) {
 
+            $itemNumber++;
             $this->result[$pageNumber][] = $item;
 
-            if ((int)fmod($itemNumber, $this->itemPerPage) === 1) {
+            if ((int)fmod($itemNumber, $this->itemPerPage) === 0) {
                 $pageNumber++;
             }
-
-            $itemNumber++;
         }
     }
-
 
     public function current()
     {
       return $this->result[$this->currentPage];
     }
 
+    public function prev()
+    {
+        if ($this->currentPage > 0) {
+            $this->currentPage--;
+        }
+    }
+
     public function next()
     {
-        ++$this->currentPage;
+        if ($this->currentPage < $this->pagesNumber) {
+            ++$this->currentPage;
+        }
     }
 
     public function key()

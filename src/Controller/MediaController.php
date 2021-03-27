@@ -3,15 +3,13 @@
 namespace src\Controller;
 
 use config\Database;
-use config\Paginator;
+use src\Service\Paginator;
 use config\Viewer;
-use src\Model\Entity;
 use src\Model\Media;
 
 /**
- * Class Media
- *
- *  here we will perform our cd media data for some testing purposes
+ * Class MediaController
+ * @package src\Controller
  */
 class MediaController extends AbstractController
 {
@@ -25,7 +23,9 @@ class MediaController extends AbstractController
      */
     private $tbl_name = 'media';
 
-
+    /**
+     * @var Paginator
+     */
     protected $Paginator;
 
     /**
@@ -36,13 +36,11 @@ class MediaController extends AbstractController
     {
         parent::__construct($viewer);
         $this->em = Database::getInstance();
-
         $this->Paginator = new Paginator();
-
     }
 
     /**
-     *  show all media (add paginator?)
+     *  @Route("/media")
      */
     public function index()
     {
@@ -65,10 +63,21 @@ class MediaController extends AbstractController
 
         $this->Paginator->setResult($mediaData);
 
-        return $this->render('public/media/show.phtml', ['mediaData' => $mediaData, 'username' => 'Christian', 'Paginator' => $this->Paginator]);
+        return $this->render('src/Templates/media/show.phtml', ['mediaData' => $mediaData, 'username' => 'Administrato', 'Paginator' => $this->Paginator]);
     }
 
     /**
+     *
+     * @Route("/media/page/1")
+     * @param int $page
+     */
+    public function page(int $page)
+    {
+        die("HERE");
+    }
+
+    /**
+     * @Route("/media/add")
      *  add new
      */
     public function add()
@@ -92,11 +101,14 @@ class MediaController extends AbstractController
             header('location: http://' . $_SERVER['SERVER_NAME'].'/media');
         }
 
-        return $this->render('public/media/add.phtml', ['mediaData' => '']);
+        return $this->render('src/Templates/media/add.phtml', ['mediaData' => '']);
     }
 
     /**
-     *  remove
+     * @Route("/media/delete/1")
+     *
+     * @param int $id
+     * @return mixed|void
      */
     public function delete(int $id)
     {
@@ -109,6 +121,8 @@ class MediaController extends AbstractController
     }
 
     /**
+     * @Route("/media/edit/1")
+     *
      * @param int $id
      * @return false|string|string[]
      * @throws \Exception
@@ -120,7 +134,6 @@ class MediaController extends AbstractController
             $this->update();
             header('location: http://' . $_SERVER['SERVER_NAME'].'/media');
         }
-
 
         $sql = 'SELECT * FROM ' . $this->tbl_name. ' WHERE id = ' . $id;
         $result = $this->em->findOneBy($sql);
@@ -134,15 +147,20 @@ class MediaController extends AbstractController
         $media->setType($result->type);
         $media->setImage($result->image);
 
-        return $this->render('public/media/edit.phtml', ['mediaData' => $media]);
+        return $this->render('src/Templates/media/edit.phtml', ['mediaData' => $media]);
     }
 
     /**
+     *
+     * @Route("media/view/1")
+     *
      * @param int $id
      */
     public function view(int $id)
     {
         //TODO:
+
+        die("inside : ".__METHOD__);
     }
 
     /**

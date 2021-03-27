@@ -14,7 +14,7 @@ class Request
     protected $entityID = null;
 
     //simple pattern definition for request handling
-    protected const PATTERN = '/\/(\w+)(\/)?(add|((view|edit|delete)(\/+)(\d+)))?/';
+    protected const PATTERN = '/\/(\w+)(\/)?(add|((\w+)(\/+)(\d+)))?/';
     protected static $flags = PREG_SET_ORDER;
 
     protected static $routeIndex = [
@@ -53,6 +53,10 @@ class Request
                     $this->entityID = $matches[self::$routeIndex['entityID']];
                     break;
             }
+        } else {
+
+            $this->controller = 'index';
+            $this->action = 'index';
         }
     }
 

@@ -1,11 +1,43 @@
 
+//console.log($);
+
+$(document).ready(function(){
+
+    alert("ok fully loaeded");
+
+    $('body').css("background-color","#fcf8e3");
+
+
+    $(".delete btn btn-secondary").click(function(e){
+
+        return false;
+    });
 
 
 
+    $(".prev-item").click(function(e){
 
-$(".delete btn btn-secondary").click(function(){
+        return false;
+    });
 
-    alert("here we are!");
+    $(".page-link").click(function(){
 
-    return false;
+        $.ajax({
+            url: 'next-item.php',
+
+        }).done(function(){
+
+            alert("ok next item called!");
+        });
+
+        return false;
+    });
+
 });
+
+var Paginator = function(){
+
+//TODO: https://ibaslogic.com/object-oriented-programming-javascript/
+//ecma5 vs ecma6
+}($);
+
