@@ -38,7 +38,5 @@ class PaginatorController
     public function jumpTo(int $page)
     {
 
-
     }
-
 }

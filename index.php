@@ -10,7 +10,7 @@ spl_autoload_register(function ($className) {
 });
 
 try {
-
+    session_start();
     $router = new Router(new \config\Viewer(), new \config\Request());
     $response = $router->handleRequest($_SERVER['REQUEST_URI']);
 

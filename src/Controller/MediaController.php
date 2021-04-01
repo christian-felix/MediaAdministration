@@ -3,6 +3,7 @@
 namespace src\Controller;
 
 use config\Database;
+use src\Service\FileHandler;
 use src\Service\Paginator;
 use config\Viewer;
 use src\Model\Media;
@@ -37,6 +38,7 @@ class MediaController extends AbstractController
         parent::__construct($viewer);
         $this->em = Database::getInstance();
         $this->Paginator = new Paginator();
+
     }
 
     /**
@@ -63,7 +65,9 @@ class MediaController extends AbstractController
 
         $this->Paginator->setResult($mediaData);
 
-        return $this->render('src/Templates/media/show.phtml', ['mediaData' => $mediaData, 'username' => 'Administrato', 'Paginator' => $this->Paginator]);
+        $_SESSION['paginator'] = $this->Paginator;
+
+        return $this->render('src/Templates/media/show.phtml', ['username' => 'Administrator', 'Paginator' => $this->Paginator]);
     }
 
     /**
@@ -73,7 +77,13 @@ class MediaController extends AbstractController
      */
     public function page(int $page)
     {
-        die("HERE");
+        $this->Paginator = $_SESSION['paginator'];
+
+        $this->Paginator->setPage($page);
+
+        $_SESSION['paginator'] = $this->Paginator;
+
+        return $this->render('src/Templates/media/show.phtml', [ 'username' => 'Administrator', 'Paginator' => $this->Paginator]);
     }
 
     /**
@@ -94,9 +104,22 @@ class MediaController extends AbstractController
             $media->setType($_POST['type']);
 
             $image = $this->uploadMedia();
-            $media->setImage($image);
+            if ($image) {
+                $media->setImage($image);
+            }
 
-            $this->em->insert($media);
+            //check if media playlist available
+            $lastID = $this->em->insert($media);
+
+
+            if (is_array($_POST['playlist_title']) && !empty($_POST['playlist_title'])) {
+
+                foreach ($_POST['playlist_title'] as $key => $title){
+
+                    $duration = $_POST['playlist_duration'][$key];
+                    //TODO: insert
+                }
+            }
 
             header('location: http://' . $_SERVER['SERVER_NAME'].'/media');
         }
@@ -112,9 +135,8 @@ class MediaController extends AbstractController
      */
     public function delete(int $id)
     {
-        //valide delete
+        //TODO: valide delete (Frontend)
         $result = $this->em->delete($id);
-
 
         //TODO: reload instead header() relocation
         header('location: http://' . $_SERVER['SERVER_NAME'].'/media');
@@ -159,8 +181,6 @@ class MediaController extends AbstractController
     public function view(int $id)
     {
         //TODO:
-
-        die("inside : ".__METHOD__);
     }
 
     /**
@@ -169,15 +189,11 @@ class MediaController extends AbstractController
      */
     protected function uploadMedia()
     {
-        $name = $_FILES['mediafile']['name'];
+        $fileHandler = new FileHandler();
+        $fileHandler->uploadFile($_FILES['mediafile']);
 
-        if (!move_uploaded_file( $_FILES['mediafile']['tmp_name'],  $_SERVER["DOCUMENT_ROOT"] . '/public/images/' . $name )){
-            throw new \Exception('Fileupload has failed ' . $name);
-        }
-
-        return $name;
+        return $fileHandler->getName();
     }
-
 
     /**
      * @throws \Exception

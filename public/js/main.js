@@ -1,43 +1,36 @@
 
-//console.log($);
+
 
 $(document).ready(function(){
 
-    alert("ok fully loaeded");
 
-    $('body').css("background-color","#fcf8e3");
+    function GenerateInputField (name, $) {
 
+        this.name = name,
+        this.button = $('button[name="add-new-title"]').get(0),
 
-    $(".delete btn btn-secondary").click(function(e){
+        this.add  = function() {
 
-        return false;
-    });
+            this.button.addEventListener('click', (event) => {
 
+                div = $(event.target).closest(".card-body").find("div").last();
+                copy = div.clone();
+                $(div).append(copy);
+            })
+        }
 
+        this.remove  = function() {
+            return 'remove'
+        }
+    }
 
-    $(".prev-item").click(function(e){
-
-        return false;
-    });
-
-    $(".page-link").click(function(){
-
-        $.ajax({
-            url: 'next-item.php',
-
-        }).done(function(){
-
-            alert("ok next item called!");
-        });
-
-        return false;
-    });
+    const str = new GenerateInputField('add-new-title', $);
+    str.add();
 
 });
 
-var Paginator = function(){
 
-//TODO: https://ibaslogic.com/object-oriented-programming-javascript/
-//ecma5 vs ecma6
-}($);
+
+
+
 

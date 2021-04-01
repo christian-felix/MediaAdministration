@@ -51,18 +51,23 @@ class Database
 
     /**
      * @param Entity $entity
+     * @return mixed
      * @throws \Exception
      */
     public function insert(Entity $entity)
     {
-        $query = 'INSERT INTO media(type, title, interpreter, image, genre, published) VALUES ("' . $entity->getType() . '", "' . $entity->getTitle() . '","' . $entity->getInterpreter() . '","' . $entity->getImage() . '","' . $entity->getGenre() . '", "' . $entity->getPublished() . '")';
-
+        $EntityHelper = new EntityHelper($entity);
+        $EntityHelper->setMethodName('insert');
+        $query = 'INSERT INTO ' . $EntityHelper->getEntityClass() . '(' . $EntityHelper->getProperties().') VALUES ('.$EntityHelper->getMethods().')';
         $this->conn->autocommit(false);
         $this->conn->query($query);
+        $lastId = $this->conn->insert_id;
 
         if (!$this->conn->commit()){
             throw new \Exception('Commit has failed' . $query);
         }
+
+        return $lastId;
     }
 
     /**

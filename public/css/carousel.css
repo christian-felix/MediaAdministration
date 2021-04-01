@@ -12,6 +12,10 @@ body {
     width: 30rem;
 }
 
+div.highlight {
+    background-color:red;
+}
+
 
 /* CUSTOMIZE THE CAROUSEL
 -------------------------------------------------- */

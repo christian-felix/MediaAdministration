@@ -11,10 +11,8 @@ class IndexController extends AbstractController
      */
     public function index()
     {
-
         return $this->render('src/Templates/index/index.phtml',[]);
     }
-
 
     public function view(int $id)
     {

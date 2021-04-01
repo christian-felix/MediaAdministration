@@ -1,0 +1,8 @@
+{
+  "database" : {
+    "user" : "admin",
+    "pass" : "admin",
+    "host" : "localhost",
+    "database" : "convento"
+  }
+}

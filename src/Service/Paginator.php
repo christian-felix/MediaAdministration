@@ -16,7 +16,7 @@ class Paginator implements \Iterator
 
     public function __construct()
     {
-        $this->currentPage = 0;
+        $this->currentPage = 1;
     }
 
     /**
@@ -25,7 +25,7 @@ class Paginator implements \Iterator
     public function setResult(array $result)
     {
         $itemNumber = 0;
-        $pageNumber = 0;
+        $pageNumber = 1;
         $this->pagesNumber = ceil(count($result) / $this->itemPerPage);
 
         foreach ($result as $item) {
@@ -39,6 +39,26 @@ class Paginator implements \Iterator
         }
     }
 
+
+    public function getNext()
+    {
+        $next = $this->currentPage;
+        return ++$next;
+    }
+
+    public function getPrev()
+    {
+        $prev = $this->currentPage;
+        return --$prev;
+    }
+
+    public function setPage(int $page)
+    {
+        if (array_key_exists($page, $this->result)) {
+            $this->currentPage = $page;
+        }
+    }
+
     public function current()
     {
       return $this->result[$this->currentPage];
@@ -46,16 +66,16 @@ class Paginator implements \Iterator
 
     public function prev()
     {
-        if ($this->currentPage > 0) {
-            $this->currentPage--;
-        }
+        //if ($this->currentPage > 0) {
+             --$this->currentPage;
+        //}
     }
 
     public function next()
     {
-        if ($this->currentPage < $this->pagesNumber) {
+       // if ($this->currentPage < $this->pagesNumber) {
             ++$this->currentPage;
-        }
+        //}
     }
 
     public function key()
@@ -70,6 +90,6 @@ class Paginator implements \Iterator
 
     public function rewind()
     {
-        $this->currentPage = 0;
+        $this->currentPage = 1;
     }
 }

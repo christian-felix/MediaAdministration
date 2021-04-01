@@ -61,7 +61,7 @@ class Viewer
         return $content;
     }
 
-    protected function renderNavi($file = 'public/navi.phtml')
+    protected function renderNavi($file = 'src/Templates/media/navi.phtml')
     {
         ob_start();
         include_once($file);
