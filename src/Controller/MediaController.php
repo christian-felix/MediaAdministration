@@ -111,7 +111,6 @@ class MediaController extends AbstractController
             //check if media playlist available
             $lastID = $this->em->insert($media);
 
-
             if (is_array($_POST['playlist_title']) && !empty($_POST['playlist_title'])) {
 
                 foreach ($_POST['playlist_title'] as $key => $title){
@@ -135,10 +134,24 @@ class MediaController extends AbstractController
      */
     public function delete(int $id)
     {
-        //TODO: valide delete (Frontend)
-        $result = $this->em->delete($id);
+        $sql = 'SELECT * FROM ' . $this->tbl_name. ' WHERE id = ' . $id;
+        $result = $this->em->findOneBy($sql);
 
-        //TODO: reload instead header() relocation
+        $media = new Media();
+        $media->setId($result->id);
+        $media->setTitle($result->title);
+        $media->setPublished($result->published);
+        $media->setInterpreter($result->interpreter);
+        $media->setGenre($result->genre);
+        $media->setType($result->type);
+        $media->setImage($result->image);
+
+        $result = $this->em->delete($media);
+
+        if (!$result) {
+            //TODO: output some info when delete action failed
+        }
+
         header('location: http://' . $_SERVER['SERVER_NAME'].'/media');
     }
 

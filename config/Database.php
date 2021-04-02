@@ -58,7 +58,8 @@ class Database
     {
         $EntityHelper = new EntityHelper($entity);
         $EntityHelper->setMethodName('insert');
-        $query = 'INSERT INTO ' . $EntityHelper->getEntityClass() . '(' . $EntityHelper->getProperties().') VALUES ('.$EntityHelper->getMethods().')';
+        $query = $EntityHelper->insert();
+
         $this->conn->autocommit(false);
         $this->conn->query($query);
         $lastId = $this->conn->insert_id;
@@ -76,7 +77,9 @@ class Database
      */
     public function update(Entity $entity)
     {
-        $query = 'UPDATE media SET type = "'. $entity->getType() . '" , title = "' . $entity->getTitle() . '" , interpreter = "' . $entity->getInterpreter() . '" , image = "' . $entity->getImage() . '"      WHERE id = ' . $entity->getId();
+        $EntityHelper = new EntityHelper($entity);
+        $EntityHelper->setMethodName('update');
+        $query = $EntityHelper->update();
 
         $this->conn->autocommit(false);
         $this->conn->query($query);
@@ -87,11 +90,15 @@ class Database
     }
 
     /**
-     * @param int $id
+     * @param Entity $entity
+     * @throws \Exception
      */
-    public function delete(int $id)
+    public function delete(Entity $entity)
     {
-        $query = 'DELETE FROM media WHERE id = ' . $id;
+        $EntityHelper = new EntityHelper($entity);
+        $EntityHelper->setMethodName('delete');
+        $query = $EntityHelper->delete();
+
         $this->conn->query($query);
     }
 
