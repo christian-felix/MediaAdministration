@@ -9,7 +9,7 @@ namespace src\Model;
 class Playlist extends Entity
 {
     protected $id;
-    protected $media_id;
+    protected $mediaId;
     protected $title;
     protected $duration;
 
@@ -34,15 +34,15 @@ class Playlist extends Entity
      */
     public function getMediaId()
     {
-        return $this->media_id;
+        return $this->mediaId;
     }
 
     /**
-     * @param mixed $media_id
+     * @param mixed $mediaId
      */
-    public function setMediaId($media_id): void
+    public function setMediaId($mediaId): void
     {
-        $this->media_id = $media_id;
+        $this->mediaId = $mediaId;
     }
 
     /**

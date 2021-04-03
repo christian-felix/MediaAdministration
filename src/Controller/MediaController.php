@@ -3,6 +3,7 @@
 namespace src\Controller;
 
 use config\Database;
+use src\Model\Playlist;
 use src\Service\FileHandler;
 use src\Service\Paginator;
 use config\Viewer;
@@ -78,7 +79,6 @@ class MediaController extends AbstractController
     public function page(int $page)
     {
         $this->Paginator = $_SESSION['paginator'];
-
         $this->Paginator->setPage($page);
 
         $_SESSION['paginator'] = $this->Paginator;
@@ -108,18 +108,25 @@ class MediaController extends AbstractController
                 $media->setImage($image);
             }
 
-            //check if media playlist available
             $lastID = $this->em->insert($media);
 
             if (is_array($_POST['playlist_title']) && !empty($_POST['playlist_title'])) {
 
                 foreach ($_POST['playlist_title'] as $key => $title){
 
+                    $title = $_POST['playlist_title'][$key];
                     $duration = $_POST['playlist_duration'][$key];
-                    //TODO: insert
+
+                    $playlist = new Playlist();
+                    $playlist->setMediaId($lastID);
+                    $playlist->setTitle($title);
+                    $playlist->setDuration($duration);
+
+                    $this->em->insert($playlist);
                 }
             }
 
+            //TODO: output success/failure message and redirect to the last page
             header('location: http://' . $_SERVER['SERVER_NAME'].'/media');
         }
 
@@ -193,7 +200,21 @@ class MediaController extends AbstractController
      */
     public function view(int $id)
     {
-        //TODO:
+        $sql = 'SELECT * FROM ' . $this->tbl_name. ' WHERE id = ' . $id;
+        $result = $this->em->findOneBy($sql);
+
+        $media = new Media();
+        $media->setId($result->id);
+        $media->setTitle($result->title);
+        $media->setPublished($result->published);
+        $media->setInterpreter($result->interpreter);
+        $media->setGenre($result->genre);
+        $media->setType($result->type);
+        $media->setImage($result->image);
+
+        //TODO: view Playlist
+
+        return $this->render('src/Templates/media/view.phtml', ['mediaData' => $media]);
     }
 
     /**

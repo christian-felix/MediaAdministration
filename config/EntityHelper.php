@@ -49,6 +49,10 @@ class EntityHelper
         return 'INSERT INTO ' . $this->getEntityClass() . '(' . $this->getProperties().') VALUES ('.$this->getMethods().')';
     }
 
+    /**
+     * @return string
+     * @throws \Exception
+     */
     public function update() : string
     {
         $key = 'id';
@@ -112,7 +116,6 @@ class EntityHelper
 
         return $result;
     }
-
 
     /**
      * @param bool $primarykey

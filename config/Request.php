@@ -17,8 +17,11 @@ class Request
     protected const PATTERN = '/\/(\w+)(\/)?(add|((\w+)(\/+)(\d+)))?/';
     protected static $flags = PREG_SET_ORDER;
 
-    protected static $routeIndex = [
+    const CONTROLLER = 1;
+    const ACTION = 5;
+    const ENTITY_ID = 7;
 
+    protected static $routeIndex = [
         'controller' => 1,
         'action'     => 5,
         'entityID'   => 7
@@ -26,6 +29,7 @@ class Request
 
     public function __construct()
     {
+
     }
 
     /**
