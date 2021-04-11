@@ -60,8 +60,6 @@ class Database
         $EntityHelper->setMethodName('insert');
         $query = $EntityHelper->insert();
 
-        echo "<br/>query_:".$query;
-
         $this->conn->autocommit(false);
         $this->conn->query($query);
         $lastId = $this->conn->insert_id;

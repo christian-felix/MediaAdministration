@@ -9,11 +9,8 @@ namespace src\Service;
  */
 class SearchEngine
 {
-
     public function __construct()
     {
 
-
     }
-
 }

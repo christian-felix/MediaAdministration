@@ -10,4 +10,6 @@ namespace src\Model;
 class Entity
 {
 
+
+
 }

@@ -11,7 +11,6 @@ class Viewer
     public $viewData = [];
 
     protected $mainPage = 'main.phtml';
-
     protected $naviPage = 'navi.phtml';
 
     /**

@@ -153,11 +153,7 @@ class MediaController extends AbstractController
         $media->setType($result->type);
         $media->setImage($result->image);
 
-        $result = $this->em->delete($media);
-
-        if (!$result) {
-            //TODO: output some info when delete action failed
-        }
+        $this->em->delete($media);
 
         header('location: http://' . $_SERVER['SERVER_NAME'].'/media');
     }
