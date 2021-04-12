@@ -5,6 +5,7 @@ namespace config;
 /**
  * Class Viewer
  * @package config
+ * @author Christian Felix
  */
 class Viewer
 {
@@ -15,21 +16,31 @@ class Viewer
 
     /**
      * Viewer constructor.
-     * @throws FileNotFoundException
+     * @throws \Exception
      */
     public function __construct()
     {
         if (!file_exists('public/' . $this->mainPage)) {
-            throw new FileNotFoundException('File : ' . $this->mainPage );
+            throw new \Exception('File : ' . $this->mainPage . 'does not exit!');
         }
     }
 
     /**
      * @param array $viewData
+     * @throws \Exception
      */
     public function setData(array $viewData)
     {
         $this->viewData = $viewData;
+
+        if (array_key_exists('navi',$viewData)) {
+
+            $this->naviPage = $viewData['navi'];
+
+            if (!file_exists('src/Templates/' . $this->naviPage)) {
+                throw new \Exception('File : ' . $this->naviPage . ' does not exist');
+            }
+        }
     }
 
     /**
@@ -48,19 +59,18 @@ class Viewer
     protected function renderMain($body)
     {
         ob_start();
-
         include_once('public/' . $this->mainPage);
         $content = ob_get_clean();
         $content = str_replace('{username}', $this->viewData['username'], $content);
+        // body content
         $content = str_replace('{body}', $body, $content);
-
-        //navigation
-        $content = str_replace('{navi}', $this->renderNavi(), $content);
+        // navi content
+        $content = str_replace('{navi}', $this->renderNavi($this->naviPage), $content);
 
         return $content;
     }
 
-    protected function renderNavi($file = 'src/Templates/media/navi.phtml')
+    protected function renderNavi(string $file)
     {
         ob_start();
         include_once($file);

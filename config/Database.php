@@ -6,6 +6,9 @@ use src\Model\Entity;
 
 /**
  * Class Database
+ * @package config
+ * @author Christian Felix
+ *
  */
 class Database
 {
@@ -59,9 +62,12 @@ class Database
         $EntityHelper = new EntityHelper($entity);
         $EntityHelper->setMethodName('insert');
         $query = $EntityHelper->insert();
-
         $this->conn->autocommit(false);
-        $this->conn->query($query);
+
+        if (!$this->conn->query($query)) {
+            throw new \Exception('Insert has failed ' . $query);
+        }
+
         $lastId = $this->conn->insert_id;
 
         if (!$this->conn->commit()){

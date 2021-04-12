@@ -4,6 +4,8 @@ namespace config;
 
 /**
  * Class Router
+ * @package config
+ * @author Christian Felix
  */
 class Router
 {

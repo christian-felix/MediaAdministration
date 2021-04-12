@@ -11,6 +11,7 @@ use ReflectionClass;
 /**
  * Class EntityHelper
  * @package config
+ * @author Christian Felix
  */
 class EntityHelper
 {
@@ -100,7 +101,6 @@ class EntityHelper
         return array_keys($this->result);
     }
 
-
     /**
      * @param bool $implode
      * @return string|string[]
@@ -156,7 +156,6 @@ class EntityHelper
 
         return $combined[$key];
     }
-
 
     /**
      * @param string $methodType

@@ -6,6 +6,7 @@ namespace config;
 /**
  * Class Request
  * @package config
+ * @author Christian Felix
  */
 class Request
 {

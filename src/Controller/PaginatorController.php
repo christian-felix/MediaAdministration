@@ -9,6 +9,7 @@ use src\Service\Paginator;
 /**
  * Class PaginatorController
  * @package src\Controller
+ * @author Christian Felix
  */
 class PaginatorController
 {

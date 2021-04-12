@@ -1,0 +1,72 @@
+
+<main>
+    <section class="py-5 text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light">Add new User</h1>
+                <p>
+                    <a href="#" class="btn btn-primary my-2">Main call to action</a>
+                    <a href="#" class="btn btn-secondary my-2">Secondary action</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <form method="post" action="#">
+
+        <div class="container w-100">
+
+            <div class="row">
+
+                <div class="col">
+
+                    <div class="card-header">
+
+                        <div class="form-group">
+                            <label for="username">username</label>
+                            <input type="text" name="name" class="form-control" id="name" aria-describedby="name" placeholder="name" required>
+                            <small id="mediaHelp" class="form-text text-muted">Media type (CD, VIDEO, ....)</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">password</label>
+                            <input type="password" name="password" class="form-control" id="password" placeholder="password" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password2">password check</label>
+                            <input type="password" name="password2" class="form-control" id="password2" placeholder="password2" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">email</label>
+                            <input type="text" name="email" class="form-control" id="interpreter" placeholder="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="role">Role</label>
+                            <select class="form-control " name="role" id="role" >
+                                <option value="1">admin</option>
+                                <option value="2">user</option>
+                                <option value="3">guest</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" id="Active" name="active">
+                            <label class="form-check-label" for="exampleCheck1">Active</label>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+
+        </div>
+
+    </form>
+
+
+</main>

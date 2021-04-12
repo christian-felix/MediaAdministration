@@ -2,45 +2,22 @@
 
 namespace src\Controller;
 
-use config\Database;
 use src\Model\Playlist;
 use src\Service\FileHandler;
-use src\Service\Paginator;
-use config\Viewer;
 use src\Model\Media;
 
 /**
  * Class MediaController
  * @package src\Controller
+ * @author Christian Felix
  */
 class MediaController extends AbstractController
 {
-    /**
-     * @var Database
-     */
-    private $em;
-
     /**
      * @var string
      */
     private $tbl_name = 'media';
 
-    /**
-     * @var Paginator
-     */
-    protected $Paginator;
-
-    /**
-     * MediaController constructor.
-     * @param Viewer $viewer
-     */
-    public function __construct(Viewer $viewer)
-    {
-        parent::__construct($viewer);
-        $this->em = Database::getInstance();
-        $this->Paginator = new Paginator();
-
-    }
 
     /**
      *  @Route("/media")
@@ -72,36 +49,21 @@ class MediaController extends AbstractController
     }
 
     /**
-     *
-     * @Route("/media/page/1")
-     * @param int $page
-     */
-    public function page(int $page)
-    {
-        $this->Paginator = $_SESSION['paginator'];
-        $this->Paginator->setPage($page);
-
-        $_SESSION['paginator'] = $this->Paginator;
-
-        return $this->render('src/Templates/media/show.phtml', [ 'username' => 'Administrator', 'Paginator' => $this->Paginator]);
-    }
-
-    /**
      * @Route("/media/add")
      *  add new
      */
     public function add()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($this->isSubmit()) {
 
             $date = new \DateTime();
 
             $media = new Media();
-            $media->setTitle($_POST['title']);
+            $media->setTitle($this->getData('title'));
             $media->setPublished($date->format('Y-m-d'));
-            $media->setInterpreter($_POST['interpreter']);
-            $media->setGenre($_POST['genre']);
-            $media->setType($_POST['type']);
+            $media->setInterpreter($this->getData('interpreter'));
+            $media->setGenre($this->getData('genre'));
+            $media->setType($this->getData('type'));
 
             $image = $this->uploadMedia();
             if ($image) {
@@ -214,35 +176,57 @@ class MediaController extends AbstractController
     }
 
     /**
+     * @throws \Exception
+     */
+    protected function update()
+    {
+        if ($this->isSubmit()) {
+
+            $date = new \DateTime();
+            $media = new Media();
+            $media->setId($this->getData('id'));
+            $media->setTitle($this->getData('title'));
+            $media->setPublished($date->format('Y-m-d'));
+            $media->setInterpreter($this->getData('interpreter'));
+            $media->setGenre($this->getData('genre'));
+            $media->setType($this->getData('type'));
+
+            $image = $this->uploadMedia();
+            $media->setImage($image);
+
+            $this->em->update($media);
+        }
+    }
+
+
+    /**
+     *
+     * @Route("/media/page/1")
+     * @param int $page
+     */
+    public function page(int $page)
+    {
+        $this->Paginator = $_SESSION['paginator'];
+        $this->Paginator->setPage($page);
+
+        $_SESSION['paginator'] = $this->Paginator;
+
+        return $this->render('src/Templates/media/show.phtml', [ 'username' => 'Administrator', 'Paginator' => $this->Paginator]);
+    }
+
+    /**
      * @return mixed
      * @throws \Exception
      */
     protected function uploadMedia()
     {
+        if (!isset($_FILES['mediafile'])) {
+            throw new \Exception('Uploaded file is missing');
+        }
+
         $fileHandler = new FileHandler();
         $fileHandler->uploadFile($_FILES['mediafile']);
 
         return $fileHandler->getName();
-    }
-
-    /**
-     * @throws \Exception
-     */
-    protected function update()
-    {
-        $date = new \DateTime();
-
-        $media = new Media();
-        $media->setId($_POST['id']);
-        $media->setTitle($_POST['title']);
-        $media->setPublished($date->format('Y-m-d'));
-        $media->setInterpreter($_POST['interpreter']);
-        $media->setGenre($_POST['genre']);
-        $media->setType($_POST['type']);
-
-        $image = $this->uploadMedia();
-        $media->setImage($image);
-
-        $this->em->update($media);
     }
 }
