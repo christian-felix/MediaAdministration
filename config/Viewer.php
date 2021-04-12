@@ -35,9 +35,9 @@ class Viewer
 
         if (array_key_exists('navi',$viewData)) {
 
-            $this->naviPage = $viewData['navi'];
+            $this->naviPage = 'src/Templates/' . $viewData['navi'];
 
-            if (!file_exists('src/Templates/' . $this->naviPage)) {
+            if (!file_exists(  $this->naviPage)) {
                 throw new \Exception('File : ' . $this->naviPage . ' does not exist');
             }
         }

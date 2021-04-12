@@ -2,6 +2,7 @@
 
 namespace src\Controller;
 
+use src\Model\Media;
 use src\Model\User;
 
 /**
@@ -11,13 +12,49 @@ use src\Model\User;
  */
 class UserController extends AbstractController
 {
+
+    public function index()
+    {
+        $mediaData = [];
+
+
+        $this->getControllerName();
+
+        die();
+
+
+
+        $sql = 'SELECT * FROM ' . $this->tbl_name;
+        $result = $this->em->findBy($sql);
+
+        foreach ($result as $item) {
+
+            $media = new Media();
+            $media->setId($item['id']);
+            $media->setGenre($item['genre']);
+            $media->setImage($item['image']);
+            $media->setInterpreter($item['interpreter']);
+            $media->setTitle($item ['title']);
+            $media->setPublished($item['published']);
+
+            $mediaData[] = $media;
+        }
+
+        $this->Paginator->setResult($mediaData);
+
+        $_SESSION['paginator'] = $this->Paginator;
+
+
+        return $this->render('src/Templates/user/show.phtml',['navi' => 'media/navi.phtml',]);
+    }
+
     /**
      * @param int $id
      * @return mixed|void
      */
     public function view(int $id)
     {
-        return $this->render('src/Templates/user/view.phtml', ['user' => $id]);
+        return $this->render('src/Templates/user/view.phtml', ['navi' => 'media/navi.phtml', 'user' => $id]);
     }
 
     /**
@@ -57,7 +94,7 @@ class UserController extends AbstractController
 
         }
 
-        return $this->render('src/Templates/user/edit.phtml', ['user' => $id]);
+        return $this->render('src/Templates/user/edit.phtml', ['navi' => 'media/navi.phtml', 'user' => $id]);
     }
 
     /**

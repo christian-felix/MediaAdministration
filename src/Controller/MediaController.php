@@ -14,18 +14,13 @@ use src\Model\Media;
 class MediaController extends AbstractController
 {
     /**
-     * @var string
-     */
-    private $tbl_name = 'media';
-
-
-    /**
      *  @Route("/media")
      */
     public function index()
     {
         $mediaData = [];
-        $sql = 'SELECT * FROM ' . $this->tbl_name;
+
+        $sql = 'SELECT * FROM ' . $this->getTableName();
         $result = $this->em->findBy($sql);
 
         foreach ($result as $item) {
@@ -45,7 +40,7 @@ class MediaController extends AbstractController
 
         $_SESSION['paginator'] = $this->Paginator;
 
-        return $this->render('src/Templates/media/show.phtml', ['username' => 'Administrator', 'Paginator' => $this->Paginator]);
+        return $this->render('src/Templates/media/show.phtml', ['navi' => 'media/navi.phtml', 'username' => 'Administrator', 'Paginator' => $this->Paginator]);
     }
 
     /**
@@ -72,19 +67,23 @@ class MediaController extends AbstractController
 
             $lastID = $this->em->insert($media);
 
-            if (is_array($_POST['playlist_title']) && !empty($_POST['playlist_title'])) {
+            if (is_array($this->getData('playlist_title')) && !empty($this->getData('playlist_title'))) {
 
-                foreach ($_POST['playlist_title'] as $key => $title){
+                foreach ($this->getData('playlist_title') as $key => $title){
 
-                    $title = $_POST['playlist_title'][$key];
-                    $duration = $_POST['playlist_duration'][$key];
+                    $title = $this->getData('playlist_title')[$key];
+                    $duration = $this->getData('playlist_duration')[$key];
 
                     $playlist = new Playlist();
                     $playlist->setMediaId($lastID);
                     $playlist->setTitle($title);
                     $playlist->setDuration($duration);
 
-                    $this->em->insert($playlist);
+                    $id = $this->em->insert($playlist);
+
+                    if (!$id) {
+                        throw new \Exception('Playlist has failed!');
+                    }
                 }
             }
 
@@ -92,7 +91,7 @@ class MediaController extends AbstractController
             header('location: http://' . $_SERVER['SERVER_NAME'].'/media');
         }
 
-        return $this->render('src/Templates/media/add.phtml', ['mediaData' => '']);
+        return $this->render('src/Templates/media/add.phtml', ['navi' => 'media/navi.phtml','mediaData' => '']);
     }
 
     /**
@@ -103,7 +102,7 @@ class MediaController extends AbstractController
      */
     public function delete(int $id)
     {
-        $sql = 'SELECT * FROM ' . $this->tbl_name. ' WHERE id = ' . $id;
+        $sql = 'SELECT * FROM ' . $this->getTableName() . ' WHERE id = ' . $id;
         $result = $this->em->findOneBy($sql);
 
         $media = new Media();
@@ -129,13 +128,13 @@ class MediaController extends AbstractController
      */
     public function edit(int $id)
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+       if ($this->isSubmit()) {
 
             $this->update();
             header('location: http://' . $_SERVER['SERVER_NAME'].'/media');
         }
 
-        $sql = 'SELECT * FROM ' . $this->tbl_name. ' WHERE id = ' . $id;
+        $sql = 'SELECT * FROM ' . $this->getTableName() . ' WHERE id = ' . $id;
         $result = $this->em->findOneBy($sql);
 
         $media = new Media();
@@ -147,7 +146,13 @@ class MediaController extends AbstractController
         $media->setType($result->type);
         $media->setImage($result->image);
 
-        return $this->render('src/Templates/media/edit.phtml', ['mediaData' => $media]);
+        //Playlist (TODO: another approach needed here...)
+        $sql = 'SELECT * FROM playlist WHERE media_id = ' . $media->getId() . ' ORDER BY title';
+        $result2 = $this->em->findBy($sql);
+
+
+
+        return $this->render('src/Templates/media/edit.phtml', ['navi' => 'media/navi.phtml', 'mediaData' => $media]);
     }
 
     /**
@@ -158,7 +163,7 @@ class MediaController extends AbstractController
      */
     public function view(int $id)
     {
-        $sql = 'SELECT * FROM ' . $this->tbl_name. ' WHERE id = ' . $id;
+        $sql = 'SELECT * FROM ' . $this->getTableName() . ' WHERE id = ' . $id;
         $result = $this->em->findOneBy($sql);
 
         $media = new Media();
@@ -172,7 +177,7 @@ class MediaController extends AbstractController
 
         //TODO: view Playlist
 
-        return $this->render('src/Templates/media/view.phtml', ['mediaData' => $media]);
+        return $this->render('src/Templates/media/view.phtml', ['navi' => 'media/navi.phtml', 'mediaData' => $media]);
     }
 
     /**
@@ -198,7 +203,6 @@ class MediaController extends AbstractController
         }
     }
 
-
     /**
      *
      * @Route("/media/page/1")
@@ -211,7 +215,7 @@ class MediaController extends AbstractController
 
         $_SESSION['paginator'] = $this->Paginator;
 
-        return $this->render('src/Templates/media/show.phtml', [ 'username' => 'Administrator', 'Paginator' => $this->Paginator]);
+        return $this->render('src/Templates/media/show.phtml', ['navi' => 'media/navi.phtml', 'username' => 'Administrator', 'Paginator' => $this->Paginator]);
     }
 
     /**

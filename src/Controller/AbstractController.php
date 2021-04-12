@@ -105,4 +105,19 @@ abstract class AbstractController
 
         return $_REQUEST[$name];
     }
+
+    /**
+     * @return string
+     * @throws \Exception
+     */
+    protected function getTableName()
+    {
+        $exploded = explode('\\', get_class($this));
+
+        if (!is_array($exploded)) {
+            throw new \Exception('Controllername could not be determined!');
+        }
+
+        return strtolower(str_replace('Controller','', end($exploded)));
+    }
 }
