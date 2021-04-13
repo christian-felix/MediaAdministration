@@ -46,6 +46,21 @@
 
             <div class="col">
 
+                <?php
+
+                foreach($this->viewData['playListContainer'] as $playlist) { ?>
+
+                    <div class="card-body" style="background-color: rgba(0,0,0,.03);">
+                        <div class="form-group;" >
+                            <label for="title">title:</label>
+                            <input type="text" name="playlist_title[]" class="form-control title"  value="<?= $playlist->getTitle();?>">
+                            <label for="duration">duration:</label>
+                            <input type="text" name="playlist_duration[]" class="form-control duration"  value="<?=$playlist->getDuration();?>">
+                        </div>
+                    </div>
+
+                <?php } ?>
+
                 <div class="card-body" style="background-color: rgba(0,0,0,.03);">
 
                     <div class="form-group;" >

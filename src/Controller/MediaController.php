@@ -148,11 +148,23 @@ class MediaController extends AbstractController
         $media->setImage($result->image);
 
         //Playlist (TODO: another approach needed here...)
-        $sql = 'SELECT * FROM playlist WHERE media_id = ' . $media->getId() . ' ORDER BY title';
+        $sql = 'SELECT * FROM playlist WHERE mediaId = ' . $media->getId() . ' ORDER BY title';
         $result2 = $this->em->findBy($sql);
 
+        $playlistContainer = [];
 
-        return $this->render('src/Templates/media/edit.phtml', ['navi' => 'media/navi.phtml', 'mediaData' => $media]);
+        foreach ($result2 as $playListItem) {
+
+            $playlist = new Playlist();
+            $playlist->setId($playListItem['id']);
+            $playlist->setTitle($playListItem['title']);
+            $playlist->setDuration($playListItem['duration']);
+            $playlist->setMediaId($playListItem['mediaId']);
+
+            $playlistContainer[] = $playlist;
+        }
+
+        return $this->render('src/Templates/media/edit.phtml', ['navi' => 'media/navi.phtml', 'mediaData' => $media, 'playListContainer' => $playlistContainer]);
     }
 
     /**

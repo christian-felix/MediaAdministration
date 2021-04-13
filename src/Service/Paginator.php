@@ -6,6 +6,7 @@ namespace src\Service;
 /**
  * Class Paginator
  * @package config
+ * @author Christian Felix
  */
 class Paginator implements \Iterator
 {

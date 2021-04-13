@@ -6,6 +6,7 @@ namespace src\Service;
 /**
  * Class FileHandler
  * @package src\Service
+ * @author Christian Felix
  */
 class FileHandler
 {
@@ -21,11 +22,13 @@ class FileHandler
     {
         if (empty($file['name']) || $file['size'] === 0 ) {
             //throw new \Exception('Fileupload triggered but no data has been passed!');
+            //TODO: add some placeholder image instead
             return;
         }
 
         $this->name = $file['name']; //TODO: uuid and display name
 
+        //TODO: check size and type before uploading content
         $size = $file['size'];
         $type = $file['type'];
 

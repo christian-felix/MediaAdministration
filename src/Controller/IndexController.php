@@ -3,7 +3,10 @@
 
 namespace src\Controller;
 
-
+/**
+ * Class IndexController
+ * @package src\Controller
+ */
 class IndexController extends AbstractController
 {
     /**
