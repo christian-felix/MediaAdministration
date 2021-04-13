@@ -16,6 +16,7 @@ class IndexController extends AbstractController
 
     public function view(int $id)
     {
+
     }
 
     public function edit(int $id)
@@ -24,6 +25,11 @@ class IndexController extends AbstractController
 
     public function delete(int $id)
     {
+    }
+
+    public function add()
+    {
+        // TODO: Implement add() method.
     }
 
 

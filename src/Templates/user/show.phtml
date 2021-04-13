@@ -15,6 +15,8 @@
                 <?php
 
                 $Paginator = $this->viewData['Paginator'];
+
+                if ($Paginator) {
                 $data = $Paginator->current();
 
                 foreach ($data as $key2 => $dt) {?>
@@ -38,7 +40,11 @@
                         </div>
                     </div>
 
-                <?php } ?>
+                <?php }
+                } else { ?>
+
+                    There are no users defined yet!
+                <?php }?>
 
             </div>
 

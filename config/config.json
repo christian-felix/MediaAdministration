@@ -4,5 +4,10 @@
     "pass" : "admin",
     "host" : "localhost",
     "database" : "convento"
+  },
+  "user" : {
+    "name" : "root",
+    "role" : "admin",
+    "pass" : "test"
   }
 }

@@ -20,6 +20,7 @@ class MediaController extends AbstractController
     {
         $mediaData = [];
 
+        //TODO: use another approach here, get rid of sql statements in controller.
         $sql = 'SELECT * FROM ' . $this->getTableName();
         $result = $this->em->findBy($sql);
 
@@ -151,7 +152,6 @@ class MediaController extends AbstractController
         $result2 = $this->em->findBy($sql);
 
 
-
         return $this->render('src/Templates/media/edit.phtml', ['navi' => 'media/navi.phtml', 'mediaData' => $media]);
     }
 
@@ -176,8 +176,24 @@ class MediaController extends AbstractController
         $media->setImage($result->image);
 
         //TODO: view Playlist
+        //Playlist (TODO: another approach needed here...)
+        $sql = 'SELECT * FROM playlist WHERE mediaId = ' . $media->getId() . ' ORDER BY title';
+        $result2 = $this->em->findBy($sql);
 
-        return $this->render('src/Templates/media/view.phtml', ['navi' => 'media/navi.phtml', 'mediaData' => $media]);
+        $playlistContainer = [];
+
+        foreach ($result2 as $playListItem) {
+
+            $playlist = new Playlist();
+            $playlist->setId($playListItem['id']);
+            $playlist->setTitle($playListItem['title']);
+            $playlist->setDuration($playListItem['duration']);
+            $playlist->setMediaId($playListItem['mediaId']);
+
+            $playlistContainer[] = $playlist;
+        }
+
+        return $this->render('src/Templates/media/view.phtml', ['navi' => 'media/navi.phtml', 'mediaData' => $media, 'playListContainer' => $playlistContainer ]);
     }
 
     /**
@@ -198,6 +214,29 @@ class MediaController extends AbstractController
 
             $image = $this->uploadMedia();
             $media->setImage($image);
+
+            //check whether playlist has been added or not
+
+            if (is_array($this->getData('playlist_title')) && !empty($this->getData('playlist_title'))) {
+
+                foreach ($this->getData('playlist_title') as $key => $title){
+
+                    $title = $this->getData('playlist_title')[$key];
+                    $duration = $this->getData('playlist_duration')[$key];
+
+                    $playlist = new Playlist();
+                    $playlist->setMediaId($media->getId());
+                    $playlist->setTitle($title);
+                    $playlist->setDuration($duration);
+
+                    //TODO: update on duplicate key
+                    $id = $this->em->insert($playlist);
+
+                    if (!$id) {
+                        throw new \Exception('Playlist has failed!');
+                    }
+                }
+            }
 
             $this->em->update($media);
         }

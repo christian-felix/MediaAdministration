@@ -17,14 +17,7 @@ class UserController extends AbstractController
     {
         $mediaData = [];
 
-
-        $this->getControllerName();
-
-        die();
-
-
-
-        $sql = 'SELECT * FROM ' . $this->tbl_name;
+        $sql = 'SELECT * FROM ' . $this->getTableName();
         $result = $this->em->findBy($sql);
 
         foreach ($result as $item) {
@@ -90,7 +83,6 @@ class UserController extends AbstractController
     public function edit(int $id)
     {
         if ($this->isSubmit()) {
-
 
         }
 

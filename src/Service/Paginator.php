@@ -39,17 +39,24 @@ class Paginator implements \Iterator
         }
     }
 
-
     public function getNext()
     {
         $next = $this->currentPage;
-        return ++$next;
+
+        if ($next < $this->pagesNumber) {
+            return ++$next;
+        }
+        return $next;
     }
 
     public function getPrev()
     {
         $prev = $this->currentPage;
-        return --$prev;
+
+        if ($prev > 0) {
+            return --$prev;
+        }
+        return $prev;
     }
 
     public function setPage(int $page)
@@ -66,16 +73,16 @@ class Paginator implements \Iterator
 
     public function prev()
     {
-        //if ($this->currentPage > 0) {
+        if ($this->currentPage > 0) {
              --$this->currentPage;
-        //}
+        }
     }
 
     public function next()
     {
-       // if ($this->currentPage < $this->pagesNumber) {
+        if ($this->currentPage < $this->pagesNumber) {
             ++$this->currentPage;
-        //}
+        }
     }
 
     public function key()

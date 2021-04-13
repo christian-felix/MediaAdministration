@@ -8,7 +8,6 @@ use src\Model\Entity;
  * Class Database
  * @package config
  * @author Christian Felix
- *
  */
 class Database
 {
@@ -115,8 +114,12 @@ class Database
     public function findBy(string $query)
     {
         $statement = $this->conn->query($query);
-        $result = $statement->fetch_all(MYSQLI_ASSOC);
-        $statement->free_result();
+        $result = [];
+
+        if ($statement) {
+            $result = $statement->fetch_all(MYSQLI_ASSOC);
+            $statement->free_result();
+        }
 
         return $result;
     }
@@ -129,8 +132,12 @@ class Database
     public function findOneBy(string $query)
     {
         $statement = $this->conn->query($query);
-        $result = $statement->fetch_object();
-        $statement->free_result();
+        $result = [];
+
+        if ($statement) {
+            $result = $statement->fetch_object();
+            $statement->free_result();
+        }
 
         return $result;
     }
