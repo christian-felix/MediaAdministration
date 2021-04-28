@@ -14,7 +14,7 @@ class Database
     private static $host = 'localhost';
     private static $pass = 'admin';
     private static $user = 'admin';
-    private static $database = 'convento';
+    private static $database = 'media_administration';
     private static $instance;
     private $conn;
 
@@ -47,7 +47,7 @@ class Database
         $this->conn = new \mysqli(self::$host, self::$user, self::$pass, self::$database);
 
         if ($this->conn->connect_error) {
-            throw new \Exception('Database connection could not be established' . $this->conn->connect_error);
+            throw new \Exception('Database connection could not be established: ' . $this->conn->connect_error);
         }
     }
 

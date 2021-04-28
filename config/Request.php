@@ -38,7 +38,10 @@ class Request
      */
     public function buildRequest(string $url)
     {
-        $matches = [];
+	$matches = []; 
+
+	$url = str_replace('MediaAdministration','',$url);
+
 
         if (preg_match(self::PATTERN, $url, $matches)){
 
@@ -62,7 +65,8 @@ class Request
 
             $this->controller = 'index';
             $this->action = 'index';
-        }
+	}
+
     }
 
     /**

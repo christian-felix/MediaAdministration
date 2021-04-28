@@ -1,5 +1,6 @@
 <?php
 
+
 use config\Router;
 
 spl_autoload_register(function ($className) {

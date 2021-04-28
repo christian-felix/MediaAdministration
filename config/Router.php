@@ -35,7 +35,6 @@ class Router
 
         $controllerClass = 'src\Controller\\'.$this->Request->getController();
         $this->Controller = new $controllerClass(self::$Viewer);
-
         $action = $this->Request->getAction();
         $actionID = $this->Request->getEntityID();
 
