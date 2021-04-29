@@ -3,6 +3,7 @@
 namespace config;
 
 use src\Model\Entity;
+use src\Kernel\ConfigReader;
 
 /**
  * Class Database
@@ -11,19 +12,19 @@ use src\Model\Entity;
  */
 class Database
 {
-    private static $host = 'localhost';
-    private static $pass = 'admin';
-    private static $user = 'admin';
-    private static $database = 'media_administration';
     private static $instance;
     private $conn;
+    private $config = [];
 
     /**
      * Database constructor.
      * use singleton for database connection
      */
-    private function __construct()
+    private function __construct(ConfigReader $configReader)
     {
+        $configReader->readConfig();
+        $this->config = $configReader->getConfig('_database');
+
         $this->connect();
     }
 
@@ -33,7 +34,7 @@ class Database
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            self::$instance = new Database();
+            self::$instance = new Database(new ConfigReader());
         }
 
         return self::$instance;
@@ -44,7 +45,7 @@ class Database
      */
     private function connect()
     {
-        $this->conn = new \mysqli(self::$host, self::$user, self::$pass, self::$database);
+        $this->conn = new \mysqli($this->config['host'], $this->config['user'], $this->config['pass'], $this->config['database']);
 
         if ($this->conn->connect_error) {
             throw new \Exception('Database connection could not be established: ' . $this->conn->connect_error);

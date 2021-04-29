@@ -1,11 +1,11 @@
 {
-  "database" : {
+  "_database" : {
     "user" : "admin",
     "pass" : "admin",
     "host" : "localhost",
     "database" : "convento"
   },
-  "user" : {
+  "_user" : {
     "name" : "root",
     "role" : "admin",
     "pass" : "test"

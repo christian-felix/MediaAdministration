@@ -3,6 +3,7 @@
 
 use config\Router;
 
+
 spl_autoload_register(function ($className) {
 
     $className = str_replace("\\", DIRECTORY_SEPARATOR, $className);
