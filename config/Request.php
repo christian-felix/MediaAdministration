@@ -37,11 +37,9 @@ class Request
      * @param string $url
      */
     public function buildRequest(string $url)
-    {
-	$matches = []; 
-
-	$url = str_replace('MediaAdministration','',$url);
-
+    {  
+	    $matches = [];  
+	    $url = str_replace('MediaAdministration','',$url);
 
         if (preg_match(self::PATTERN, $url, $matches)){
 

@@ -31,11 +31,12 @@ class Viewer
      */
     public function setData(array $viewData)
     {
-        $this->viewData = $viewData;
+        $this->viewData = $viewData; 
 
         if (array_key_exists('navi',$viewData)) {
 
             $this->naviPage = 'src/Templates/' . $viewData['navi'];
+
 
             if (!file_exists(  $this->naviPage)) {
                 throw new \Exception('File : ' . $this->naviPage . ' does not exist');
@@ -57,15 +58,22 @@ class Viewer
      * @return false|string|string[]
      */
     protected function renderMain($body)
-    {
+    { 
         ob_start();
         include_once('public/' . $this->mainPage);
         $content = ob_get_clean();
-        $content = str_replace('{username}', $this->viewData['username'], $content);
+
+        if (in_array('username', $this->viewData)) { 
+            $content = str_replace('{username}', $this->viewData['username'], $content);
+        }    
+            
         // body content
         $content = str_replace('{body}', $body, $content);
         // navi content
-        $content = str_replace('{navi}', $this->renderNavi($this->naviPage), $content);
+
+        if ($this->naviPage) {
+            $content = str_replace('{navi}', $this->renderNavi($this->naviPage), $content);
+        }        
 
         return $content;
     }

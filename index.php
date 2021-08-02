@@ -1,8 +1,6 @@
 <?php
 
-
 use config\Router;
-
 
 spl_autoload_register(function ($className) {
 
@@ -16,13 +14,9 @@ try {
     $router = new Router(new \config\Viewer(), new \config\Request());
     $response = $router->handleRequest($_SERVER['REQUEST_URI']);
 
-} catch (Throwable $e) {  // PHP 7
+} catch (Throwable $e) {  
 
     die('Error occurred: ' . $e->getMessage() . ' line : ' . $e->getLine() . ' file: ' .  $e->getFile());
-
-} catch (Exception $e) { // PHP 5
-
-    die('Error occurred: ' . $e->getMessage() . ' line : ' . $e->getLine() . ' file: ' .  $e->getFile());
-}
+} 
 
 echo $response;

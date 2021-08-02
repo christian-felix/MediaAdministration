@@ -1,12 +1,15 @@
 
 
+$(document).ready(function(){    
 
-$(document).ready(function(){
 
-
+    //method only required on specified pages 
     function GenerateInputField (name, $) {
 
         this.name = name,
+
+        //check if available 
+
         this.button = $('button[name="add-new-title"]').get(0),
 
         this.add  = function() {
@@ -20,14 +23,18 @@ $(document).ready(function(){
         }
 
         this.remove  = function() {
+
+
             return 'remove'
         }
     }
 
+    
     const str = new GenerateInputField('add-new-title', $);
     str.add();
 
 });
+
 
 
 
